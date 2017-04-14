@@ -1,21 +1,15 @@
 package mainProgram;
 
-import java.awt.Dimension;
+import java.awt.Component;
 import java.awt.FlowLayout;
-import java.io.IOException;
-import javax.swing.JEditorPane;
 import javax.swing.JFrame;
-import javax.swing.JScrollPane;
 
 public class BrowserWindow {
-	private static JFrame frame = new JFrame("Web Browser");
-	JEditorPane jep = new JEditorPane();
-	String url = "https://www.google.co.uk/";
+	 static JFrame frame = new JFrame("Web Browser");
+
 
 	public BrowserWindow() {
-		generateEditorPane();
 		generateWindow();
-		refresh();
 	}
 
 	private void generateWindow() {
@@ -24,34 +18,8 @@ public class BrowserWindow {
 		frame.pack();
 		frame.setVisible(true);
 	}
-
-	private void generateEditorPane() {
-		JScrollPane editorScrollPane = new JScrollPane();
-		editorScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-		editorScrollPane.setPreferredSize(new Dimension(500, 500));
-		editorScrollPane.setMinimumSize(new Dimension(100, 100));
-		jep.setPreferredSize(new Dimension(500, 500));
-		jep.setEditorKit(JEditorPane.createEditorKitForContentType("text/html"));
-		jep.setEditable(false);
-		editorScrollPane.add(jep);
-		frame.add(editorScrollPane);
-
+	
+	public static void addToFrame(Component o){
+		frame.add(o);
 	}
-
-	public void setURL(String url) {
-		this.url = url;
-	}
-
-	public String getURL() {
-		return this.url;
-	}
-
-	public void refresh() {
-		try {
-			jep.setPage(url);
-		} catch (IOException e) {
-			System.err.println("URL error with the following URL:" + url);
-		}
-	}
-
 }
