@@ -15,20 +15,15 @@ import javax.swing.JTextField;
 public class BrowserWindow {
 	JFrame frame = new JFrame("Web Browser");
 	JEditorPane jep = new JEditorPane();
-	JPanel toolbar = new JPanel();
-	JTextField addressbar = new JTextField(30);
-	JButton homeBut = new JButton("Home");
-	JButton historyBut = new JButton("History");
-	JButton bookmarkBut = new JButton("Bookmarks");
-
 	String url = "https://www.google.co.uk/";
 	String home = "https://www.google.co.uk/";
 	GridBagConstraints gbc = new GridBagConstraints();
+	ToolBar tb = new ToolBar();
 
 	public BrowserWindow() {
 		generateWindow();
-		generateToolBar();
 		generateEditorPane();
+		frame.add(tb.getToolbar());
 		goHome();
 		frame.setVisible(true);
 	}
@@ -87,49 +82,6 @@ public class BrowserWindow {
 		}
 	}
 	
-	private void generateAddressBar(){
-		gbc.fill = GridBagConstraints.HORIZONTAL;
-		gbc.weightx = 1;
-		gbc.weighty = 1;
-		gbc.gridx = 1;
-		
-		toolbar.add(addressbar,gbc);
-	}
 	
-	private void generateHomeButton(){
-		gbc.fill = GridBagConstraints.BOTH;
-		gbc.weightx = 1;
-		gbc.weighty = 1;
-		gbc.gridx = 0;
-		toolbar.add(homeBut);
-	}
-	
-	private void generateHistoryButton(){
-		gbc.fill = GridBagConstraints.BOTH;
-		gbc.weightx = 1;
-		gbc.weighty = 1;
-		gbc.gridx = 3;
-		toolbar.add(historyBut);
-	}
-	
-	private void generateBookmarkButton(){
-		gbc.fill = GridBagConstraints.BOTH;
-		gbc.weightx = 1;
-		gbc.weighty = 1;
-		gbc.gridx = 4;
-		toolbar.add(bookmarkBut);
-	}
-	private void generateToolBar(){
-		toolbar.setLayout(new GridBagLayout());
-		generateHomeButton();
-		generateAddressBar();
-		generateHistoryButton();
-		generateBookmarkButton();
-		gbc.fill = GridBagConstraints.BOTH;
-		gbc.weightx = 0.03;
-		gbc.weighty = 0.03;
-		gbc.gridy = 0;
-		frame.add(toolbar,gbc);
-	}
 
 }
