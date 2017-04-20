@@ -28,6 +28,8 @@ public class BrowserWindow {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setLayout(new GridBagLayout());
 		frame.setSize(new Dimension(900, 600));
+		frame.setMinimumSize(new Dimension(900, 600));
+
 	}
 
 	private void generateEditorPane() {
