@@ -18,8 +18,8 @@ public class BrowserWindow {
 
 	public BrowserWindow() {
 		generateWindow();
+		generateToolBar();
 		generateEditorPane();
-		frame.add(tb.getToolbar());
 		goHome();
 		frame.setVisible(true);
 	}
@@ -78,6 +78,15 @@ public class BrowserWindow {
 		} catch (IOException e) {
 			System.err.println("URL error with the following URL:" + url);
 		}
+		tb.setAddressText(home);
+	}
+	
+	private void generateToolBar(){
+		gbc.fill = GridBagConstraints.BOTH;
+		gbc.weightx = 1;
+		gbc.weighty = 0.1;
+		gbc.gridx = 0;
+		frame.add(tb.getToolbar());
 	}
 	
 	

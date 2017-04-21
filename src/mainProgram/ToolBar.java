@@ -10,7 +10,7 @@ import javax.swing.JTextField;
 
 public class ToolBar {
 	JPanel toolbar = new JPanel();
-	JTextField addressbar = new JTextField();
+	JTextField addressbar = new JTextField(50);
 	JButton homeBut = new JButton("Home");
 	JButton settingsBut = new JButton("Settings");
 	JButton goBut = new JButton("Go");
@@ -19,35 +19,37 @@ public class ToolBar {
 	GridBagConstraints gbc = new GridBagConstraints();
 
 	private void generateAddressBar() {
-		addressbar.setMaximumSize(new Dimension(10,100));
-		addressbar.setMinimumSize(new Dimension(10,100));
-		gbc.fill = GridBagConstraints.HORIZONTAL;
-		gbc.weightx = 1;
-		gbc.weighty = 1;
-		gbc.gridx = 2;
-
-		toolbar.add(addressbar, gbc);
-	}
-	private void generateNavigationButtons() {
-		gbc.fill = GridBagConstraints.BOTH;
-		gbc.weightx = 1;
-		gbc.weighty = 1;
-		gbc.gridx = 1;
-
-		toolbar.add(forBut, gbc);
-		toolbar.add(backBut, gbc);
-	}
-	private void generateGoButton() {
+		addressbar.setMinimumSize(new Dimension(500, 20));
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.weightx = 1;
 		gbc.weighty = 1;
 		gbc.gridx = 3;
 
+		toolbar.add(addressbar, gbc);
+	}
+
+	private void generateNavigationButtons() {
+		gbc.fill = GridBagConstraints.BOTH;
+		gbc.weightx = 0.5;
+		gbc.weighty = 1;
+		gbc.gridx = 1;
+		toolbar.add(backBut, gbc);
+
+		gbc.gridx = 2;
+		toolbar.add(forBut, gbc);
+	}
+
+	private void generateGoButton() {
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		gbc.weightx = 1;
+		gbc.weighty = 1;
+		gbc.gridx = 4;
+
 		toolbar.add(goBut, gbc);
 	}
 
 	private void generateHomeButton() {
-		gbc.fill = GridBagConstraints.BOTH;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.weightx = 1;
 		gbc.weighty = 1;
 		gbc.gridx = 0;
@@ -55,24 +57,29 @@ public class ToolBar {
 	}
 
 	private void generateSettingsButton() {
-		gbc.fill = GridBagConstraints.BOTH;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.weightx = 1;
 		gbc.weighty = 1;
-		gbc.gridx = 4;
+		gbc.gridx = 5;
 		toolbar.add(settingsBut);
 	}
 
 	private void generateToolBar() {
 		toolbar.setLayout(new GridBagLayout());
 		generateHomeButton();
-		generateAddressBar();
-		generateSettingsButton();
 		generateNavigationButtons();
+		generateAddressBar();
 		generateGoButton();
+		generateSettingsButton();
+
 	}
 
 	public JPanel getToolbar() {
 		generateToolBar();
 		return toolbar;
+	}
+
+	public void setAddressText(String address) {
+		addressbar.setText(address);
 	}
 }
