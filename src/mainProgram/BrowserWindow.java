@@ -48,6 +48,7 @@ public class BrowserWindow {
 
 	public void setURL(String url) {
 		this.url = url;
+		refresh();
 	}
 
 	public String getURL() {
@@ -78,6 +79,7 @@ public class BrowserWindow {
 		} catch (IOException e) {
 			System.err.println("URL error with the following URL:" + url);
 		}
+		setURL(home);
 		tb.setAddressText(home);
 	}
 	
