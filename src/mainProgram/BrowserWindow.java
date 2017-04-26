@@ -11,11 +11,14 @@ import javax.swing.JScrollPane;
 public class BrowserWindow {
 	JFrame frame = new JFrame("Web Browser");
 	JEditorPane jep = new JEditorPane();
-	String url = "https://www.google.co.uk/";
-	String home = "https://www.google.co.uk/";
 	GridBagConstraints gbc = new GridBagConstraints();
+	
+	String url = "https://www.google.co.uk/";
+	String home = "";
+	
 	ToolBar tb = new ToolBar();
-
+	Config config = new Config();
+	
 	public BrowserWindow() {
 		generateWindow();
 		generateToolBar();
@@ -55,14 +58,6 @@ public class BrowserWindow {
 		return this.url;
 	}
 
-	public String getHome() {
-		return home;
-	}
-
-	public void setHome(String home) {
-		this.home = home;
-	}
-
 	// Reloads the current URL
 	public void refresh() {
 		try {
@@ -72,8 +67,9 @@ public class BrowserWindow {
 		}
 	}
 
-	// Returns the user to their home URL
+	// Returns the user to their home URL by getting the URL from the config file
 	public void goHome() {
+		home = config.getHome();
 		try {
 			jep.setPage(home);
 		} catch (IOException e) {
