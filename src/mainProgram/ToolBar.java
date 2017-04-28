@@ -1,3 +1,9 @@
+/**
+ * @author Jay Howarth - B160397129
+ * Description:The purpose of this class it to assemble all of the 
+ * GUI components into a toolbar; ready to add to the BrowserWindow class.
+ */
+
 package mainProgram;
 
 import java.awt.Dimension;
@@ -81,5 +87,9 @@ public class ToolBar {
 
 	public void setAddressText(String address) {
 		addressbar.setText(address);
+	}
+	
+	public String getAddressText(){
+		return addressbar.getText();
 	}
 }
