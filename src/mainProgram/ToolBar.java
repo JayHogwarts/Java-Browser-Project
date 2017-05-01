@@ -9,12 +9,14 @@ package mainProgram;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-public class ToolBar {
+public class ToolBar{
 	JPanel toolbar = new JPanel();
 	JTextField addressbar = new JTextField(50);
 	JButton homeBut = new JButton("Home");
@@ -55,6 +57,7 @@ public class ToolBar {
 	}
 
 	private void generateHomeButton() {
+		
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.weightx = 1;
 		gbc.weighty = 1;
@@ -92,4 +95,62 @@ public class ToolBar {
 	public String getAddressText(){
 		return addressbar.getText();
 	}
+
+	public JTextField getAddressbar() {
+		return addressbar;
+	}
+
+	public void setAddressbar(JTextField addressbar) {
+		this.addressbar = addressbar;
+	}
+
+	public JButton getHomeBut() {
+		return homeBut;
+	}
+
+	public void setHomeBut(JButton homeBut) {
+		this.homeBut = homeBut;
+	}
+
+	public JButton getSettingsBut() {
+		return settingsBut;
+	}
+
+	public void setSettingsBut(JButton settingsBut) {
+		this.settingsBut = settingsBut;
+	}
+
+	public JButton getGoBut() {
+		return goBut;
+	}
+
+	public void setGoBut(JButton goBut) {
+		this.goBut = goBut;
+	}
+
+	public JButton getBackBut() {
+		return backBut;
+	}
+
+	public void setBackBut(JButton backBut) {
+		this.backBut = backBut;
+	}
+
+	public JButton getForBut() {
+		return forBut;
+	}
+
+	public void setForBut(JButton forBut) {
+		this.forBut = forBut;
+	}
+
+	public GridBagConstraints getGbc() {
+		return gbc;
+	}
+
+	public void setGbc(GridBagConstraints gbc) {
+		this.gbc = gbc;
+	}
+	
+	
 }

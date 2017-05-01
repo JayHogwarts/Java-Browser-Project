@@ -9,7 +9,11 @@ package mainProgram;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.Stack;
+
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
@@ -21,9 +25,11 @@ public class BrowserWindow {
 
 	String url = "https://www.google.co.uk/";
 	String home = "";
+	Stack<String> tempHistory = new Stack<String>();
 
 	ToolBar tb = new ToolBar();
 	Config config = new Config();
+	SettingsWindow sw = new SettingsWindow();
 
 	public BrowserWindow() {
 		generateFrame();
@@ -31,6 +37,39 @@ public class BrowserWindow {
 		generateEditorPane();
 		goHome();
 		frame.setVisible(true);
+
+		tb.getHomeBut().addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				goHome();
+			}
+		});
+
+		tb.getGoBut().addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				loadUrl();
+			}
+		});
+
+		tb.getSettingsBut().addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				sw.openWindow();
+			}
+		});
+
+		tb.getBackBut().addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String s = tempHistory.pop();
+				tempHistory.push(url);
+				setUrl(s);
+			}
+		});
+
+		tb.getForBut().addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+			}
+		});
+
 	}
 
 	// Creates the frame with its default settings (does not make the frame
@@ -59,18 +98,27 @@ public class BrowserWindow {
 		frame.add(editorScrollPane, gbc);
 	}
 
-	public void setURL(String url) {
+	public void setUrl(String url) {
 		this.url = url;
 		refresh();
 	}
 
-	public String getURL() {
+	public String getUrl() {
 		return this.url;
+	}
+
+	public void loadUrl() {
+		url = tb.getAddressText();
+		tempHistory.push(url);
+		try {
+			jep.setPage(url);
+		} catch (IOException e) {
+			System.err.println("URL error with the following URL:" + url);
+		}
 	}
 
 	// Reloads the current URL
 	public void refresh() {
-		url = tb.getAddressText();
 		try {
 			jep.setPage(url);
 		} catch (IOException e) {
@@ -82,12 +130,13 @@ public class BrowserWindow {
 	// file
 	public void goHome() {
 		home = config.getHome();
+		tempHistory.push(home);
 		try {
 			jep.setPage(home);
 		} catch (IOException e) {
-			System.err.println("URL error with the following URL:" + url);
+			System.err.println("URL error with the following URL:" + home);
 		}
-		setURL(home);
+		setUrl(home);
 		tb.setAddressText(home);
 	}
 
@@ -99,5 +148,4 @@ public class BrowserWindow {
 		gbc.gridx = 0;
 		frame.add(tb.getToolbar());
 	}
-
 }

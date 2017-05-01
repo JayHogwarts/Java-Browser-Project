@@ -7,8 +7,6 @@ public class TestClass {
 
 	public static void main(String[] args) {
 		BrowserWindow bw = new BrowserWindow();
-		SettingsWindow s = new SettingsWindow();
-		s.openWindow();
 	}
 
 }

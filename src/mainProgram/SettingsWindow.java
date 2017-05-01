@@ -31,7 +31,7 @@ public class SettingsWindow {
 	}
 
 	private void generateFrame() {
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.setLayout(new GridBagLayout());
 		frame.setSize(new Dimension(600, 300));
 		frame.setMinimumSize(new Dimension(600, 300));
@@ -44,8 +44,7 @@ public class SettingsWindow {
 		gbc.fill = GridBagConstraints.BOTH;
 		gbc.weightx = 1;
 		gbc.weighty = 1;
-
-		frame.add(mainPane);
+		frame.add(mainPane,  gbc);
 	}
 
 	private void generateHistoryView() {
