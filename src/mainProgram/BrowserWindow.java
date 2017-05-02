@@ -27,7 +27,7 @@ public class BrowserWindow {
 	String home = "";
 	Stack<String> tempHistory = new Stack<String>();
 
-	ToolBar tb = new ToolBar();
+	ToolBar tb = new ToolBar(jep);
 	Config config = new Config();
 	SettingsWindow sw = new SettingsWindow();
 

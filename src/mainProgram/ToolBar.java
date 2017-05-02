@@ -11,8 +11,10 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 import javax.swing.JButton;
+import javax.swing.JEditorPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -25,7 +27,59 @@ public class ToolBar{
 	JButton backBut = new JButton("<");
 	JButton forBut = new JButton(">");
 	GridBagConstraints gbc = new GridBagConstraints();
+	JEditorPane htmlViewer;
+	
+	String home;
+	
+	
+	Config config = new Config();
+	
+	ToolBar(JEditorPane jep){
+		htmlViewer = jep;
+		
+		homeBut.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				home = config.getHome();
+				tempHistory.push(home);
+				try {
+					jep.setPage(home);
+				} catch (IOException e) {
+					System.err.println("URL error with the following URL:" + home);
+				}
+				setUrl(home);
+				tb.setAddressText(home);
+			}
+			}
+		});
 
+		goBut.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				loadUrl();
+			}
+		});
+
+		settingsBut.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				sw.openWindow();
+			}
+		});
+
+		backBut.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String s = tempHistory.pop();
+				tempHistory.push(url);
+				setUrl(s);
+			}
+		});
+
+		forBut.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+			}
+		});
+
+		
+	}
 	private void generateAddressBar() {
 		addressbar.setMinimumSize(new Dimension(500, 20));
 		gbc.fill = GridBagConstraints.HORIZONTAL;
