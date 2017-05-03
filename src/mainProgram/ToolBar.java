@@ -12,6 +12,7 @@ import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.Stack;
 
 import javax.swing.JButton;
 import javax.swing.JEditorPane;
@@ -29,55 +30,59 @@ public class ToolBar{
 	GridBagConstraints gbc = new GridBagConstraints();
 	JEditorPane htmlViewer;
 	
-	String home;
-	
+	String url;
+	Stack<String> tempHistory = new Stack<String>();
 	
 	Config config = new Config();
+	SettingsWindow sw = new SettingsWindow();
 	
 	ToolBar(JEditorPane jep){
 		htmlViewer = jep;
 		
 		homeBut.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				home = config.getHome();
-				tempHistory.push(home);
-				try {
-					jep.setPage(home);
-				} catch (IOException e) {
-					System.err.println("URL error with the following URL:" + home);
+				url = config.getHome();
+				tempHistory.push(url);
+				setAddressText(url);
+				try{
+					htmlViewer.setPage(url);
+				}catch(IOException ioe){
+					System.err.println("URL error with the following URL:" + url);
 				}
-				setUrl(home);
-				tb.setAddressText(home);
-			}
 			}
 		});
-
+		
 		goBut.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				loadUrl();
+				url = getAddressText();
+				tempHistory.push(url);
+				try{
+					htmlViewer.setPage(url);
+				}catch(IOException ioe){
+					System.err.println("URL error with the following URL:" + url);
+				}
 			}
 		});
-
+		
 		settingsBut.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				sw.openWindow();
 			}
 		});
-
+		
 		backBut.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String s = tempHistory.pop();
 				tempHistory.push(url);
-				setUrl(s);
+				
+				try{
+					htmlViewer.setPage(url);
+				}catch(IOException ioe){
+					System.err.println("URL error with the following URL:" + url);
+				}
+				
 			}
 		});
-
-		forBut.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-
-			}
-		});
-
 		
 	}
 	private void generateAddressBar() {

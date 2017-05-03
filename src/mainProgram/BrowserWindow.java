@@ -29,7 +29,7 @@ public class BrowserWindow {
 
 	ToolBar tb = new ToolBar(jep);
 	Config config = new Config();
-	SettingsWindow sw = new SettingsWindow();
+	
 
 	public BrowserWindow() {
 		generateFrame();
@@ -37,24 +37,6 @@ public class BrowserWindow {
 		generateEditorPane();
 		goHome();
 		frame.setVisible(true);
-
-		tb.getHomeBut().addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				goHome();
-			}
-		});
-
-		tb.getGoBut().addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				loadUrl();
-			}
-		});
-
-		tb.getSettingsBut().addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				sw.openWindow();
-			}
-		});
 
 		tb.getBackBut().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
