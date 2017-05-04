@@ -16,10 +16,5 @@ public class JUnitTestingForWebBrowser {
 		assertEquals(c.readHome(),c.getHome());
 	}
 	
-	@Test
-	public void testSettings(){
-		SettingsWindow s = new SettingsWindow();
-		s.openWindow();
-	}
 
 }

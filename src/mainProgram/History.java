@@ -12,23 +12,23 @@ public class History {
 	File historyFile = new File("BrowserFiles/history.txt");
 	Stack<String> history = new Stack<String>();
 
-	// Uses a BufferedReader to get the first line of text in the config file
+	// Uses a BufferedReader to read each line of the history file into a stack
 	public Stack<String> readHistory() {
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader(historyFile));
 			String txt;
-			while((txt = reader.readLine()) != null) {
+			while ((txt = reader.readLine()) != null) {
 				history.push(txt);
 			}
 			reader.close();
 		} catch (IOException e) {
-			File historyFile = new File("BrowserFiles/config.txt");
+			File historyFile = new File("BrowserFiles/history.txt");
 		}
 
 		return history;
 	}
 
-	// Writes a new config file with the new home
+	// Writes a string to the history file
 	public void writeHistory(String h) {
 		try {
 			BufferedWriter writer = new BufferedWriter(new FileWriter(historyFile, true));
@@ -36,8 +36,13 @@ public class History {
 			writer.newLine();
 			writer.close();
 		} catch (IOException e) {
-			File historyFile = new File("BrowserFiles/config.txt");
+			File historyFile = new File("BrowserFiles/history.txt");
 		}
 
+	}
+
+	public void clearHistory() {
+		historyFile.delete();
+		File historyFile = new File("BrowserFiles/history.txt");
 	}
 }

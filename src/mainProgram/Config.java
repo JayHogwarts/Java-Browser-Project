@@ -42,7 +42,7 @@ public class Config {
 			writer.write(h);
 			writer.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+			File config = new File("BrowserFiles/config.txt");
 		}
 
 		this.home = h;

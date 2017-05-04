@@ -16,11 +16,15 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.ListIterator;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JEditorPane;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkListener;
+import javax.swing.text.Document;
 
 public class ToolBar {
 	JPanel toolbar = new JPanel();
@@ -28,17 +32,18 @@ public class ToolBar {
 	JButton homeBut = new JButton("Home");
 	JButton settingsBut = new JButton("Settings");
 	JButton goBut = new JButton("Go");
+	JButton bookBut = new JButton("Bookmark");
 	JButton backBut = new JButton("<");
 	JButton forBut = new JButton(">");
+	JButton refreshBut = new JButton("Refresh");
 	GridBagConstraints gbc = new GridBagConstraints();
 	JEditorPane htmlViewer;
-
 	String url;
 	LinkedList<String> tempHistory = new LinkedList<String>();
 	ListIterator<String> iterator = tempHistory.listIterator();
 	History history = new History();
+	Bookmarks bookmarks = new Bookmarks();
 	Config config = new Config();
-	SettingsWindow sw = new SettingsWindow();
 
 	ToolBar(JEditorPane jep) {
 		htmlViewer = jep;
@@ -69,6 +74,18 @@ public class ToolBar {
 				}
 			}
 		});
+		
+		refreshBut.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Document doc = htmlViewer.getDocument();
+				doc.putProperty(Document.StreamDescriptionProperty, null);
+				try {
+					setPageUrl();
+				} catch (IOException e1) {
+					JOptionPane.showMessageDialog(null, "The follwing URL is invalid:" + url);
+				}
+			}
+		});
 
 		goBut.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -88,9 +105,15 @@ public class ToolBar {
 			}
 		});
 
+		bookBut.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				bookmarks.writeBookmarks(url);
+			}
+		});
+
 		settingsBut.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				sw.openWindow();
+				SettingsWindow sw = new SettingsWindow();
 			}
 		});
 
@@ -128,69 +151,45 @@ public class ToolBar {
 			}
 		});
 
+		htmlViewer.addHyperlinkListener(new HyperlinkListener() {
+			public void hyperlinkUpdate(HyperlinkEvent e) {
+				if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+					url = e.getURL().toString();
+					try {
+						setPageUrl();
+						history.writeHistory(url);
+						if (iterator.hasNext()) {
+							iterator.next();
+						}
+						iterator.add(url);
+						iterator.previous();
+
+					} catch (IOException eGo) {
+						JOptionPane.showMessageDialog(null, "The follwing URL is invalid:" + url);
+					}
+				}
+			}
+		});
+
 	}
 
 	private void setPageUrl() throws IOException {
 		setAddressText(url);
-		System.out.println(url);
 		htmlViewer.setPage(url);
 
 	}
 
-	private void generateAddressBar() {
-		addressbar.setMinimumSize(new Dimension(500, 20));
-		gbc.fill = GridBagConstraints.HORIZONTAL;
-		gbc.weightx = 1;
-		gbc.weighty = 1;
-		gbc.gridx = 3;
-
-		toolbar.add(addressbar, gbc);
-	}
-
-	private void generateNavigationButtons() {
-		gbc.fill = GridBagConstraints.BOTH;
-		gbc.weightx = 0.5;
-		gbc.weighty = 1;
-		gbc.gridx = 1;
-		toolbar.add(backBut, gbc);
-
-		gbc.gridx = 2;
-		toolbar.add(forBut, gbc);
-	}
-
-	private void generateGoButton() {
-		gbc.fill = GridBagConstraints.HORIZONTAL;
-		gbc.weightx = 1;
-		gbc.weighty = 1;
-		gbc.gridx = 4;
-
-		toolbar.add(goBut, gbc);
-	}
-
-	private void generateHomeButton() {
-
-		gbc.fill = GridBagConstraints.HORIZONTAL;
-		gbc.weightx = 1;
-		gbc.weighty = 1;
-		gbc.gridx = 0;
-		toolbar.add(homeBut);
-	}
-
-	private void generateSettingsButton() {
-		gbc.fill = GridBagConstraints.HORIZONTAL;
-		gbc.weightx = 1;
-		gbc.weighty = 1;
-		gbc.gridx = 5;
-		toolbar.add(settingsBut);
-	}
-
 	private void generateToolBar() {
 		toolbar.setLayout(new GridBagLayout());
-		generateHomeButton();
-		generateNavigationButtons();
-		generateAddressBar();
-		generateGoButton();
-		generateSettingsButton();
+		toolbar.add(homeBut);
+		toolbar.add(refreshBut);
+		toolbar.add(backBut);
+		toolbar.add(forBut);
+		addressbar.setMinimumSize(new Dimension(400, 20));
+		toolbar.add(addressbar);
+		toolbar.add(goBut);
+		toolbar.add(bookBut);
+		toolbar.add(settingsBut);
 
 	}
 
