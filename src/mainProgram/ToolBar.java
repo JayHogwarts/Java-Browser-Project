@@ -1,7 +1,8 @@
 /**
  * @author Jay Howarth - B160397129
  * Description:The purpose of this class it to assemble all of the 
- * GUI components into a toolbar; ready to add to the BrowserWindow class.
+ * GUI components into a toolbar; ready to add to the BrowserWindow class. This class contains most 
+ * of the action listener functionality as the toolbar is what the user will be using most.
  */
 
 package mainProgram;
@@ -12,14 +13,16 @@ import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.util.Stack;
+import java.util.LinkedList;
+import java.util.ListIterator;
 
 import javax.swing.JButton;
 import javax.swing.JEditorPane;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-public class ToolBar{
+public class ToolBar {
 	JPanel toolbar = new JPanel();
 	JTextField addressbar = new JTextField(50);
 	JButton homeBut = new JButton("Home");
@@ -29,62 +32,111 @@ public class ToolBar{
 	JButton forBut = new JButton(">");
 	GridBagConstraints gbc = new GridBagConstraints();
 	JEditorPane htmlViewer;
-	
+
 	String url;
-	Stack<String> tempHistory = new Stack<String>();
-	
+	LinkedList<String> tempHistory = new LinkedList<String>();
+	ListIterator<String> iterator = tempHistory.listIterator();
+	History history = new History();
 	Config config = new Config();
 	SettingsWindow sw = new SettingsWindow();
-	
-	ToolBar(JEditorPane jep){
+
+	ToolBar(JEditorPane jep) {
 		htmlViewer = jep;
-		
+		url = config.getHome();
+		try {
+			setPageUrl();
+			history.writeHistory(url);
+			iterator.add(url);
+			iterator.previous();
+		} catch (IOException e) {
+			JOptionPane.showMessageDialog(null,
+					"The default home URL is invalid. Please change it using the config file.");
+		}
 		homeBut.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				url = config.getHome();
-				tempHistory.push(url);
-				setAddressText(url);
-				try{
-					htmlViewer.setPage(url);
-				}catch(IOException ioe){
-					System.err.println("URL error with the following URL:" + url);
+				try {
+					setPageUrl();
+					history.writeHistory(url);
+					if (iterator.hasNext()) {
+						iterator.next();
+					}
+					iterator.add(url);
+					iterator.previous();
+				} catch (IOException eHome) {
+					JOptionPane.showMessageDialog(null,
+							"The default home URL is invalid. Please change it using the config file.");
 				}
 			}
 		});
-		
+
 		goBut.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				url = getAddressText();
-				tempHistory.push(url);
-				try{
-					htmlViewer.setPage(url);
-				}catch(IOException ioe){
-					System.err.println("URL error with the following URL:" + url);
+				try {
+					setPageUrl();
+					history.writeHistory(url);
+					if (iterator.hasNext()) {
+						iterator.next();
+					}
+					iterator.add(url);
+					iterator.previous();
+
+				} catch (IOException eGo) {
+					JOptionPane.showMessageDialog(null, "The follwing URL is invalid:" + url);
 				}
 			}
 		});
-		
+
 		settingsBut.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				sw.openWindow();
 			}
 		});
-		
+
 		backBut.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String s = tempHistory.pop();
-				tempHistory.push(url);
-				
-				try{
-					htmlViewer.setPage(url);
-				}catch(IOException ioe){
-					System.err.println("URL error with the following URL:" + url);
+
+				if (iterator.hasPrevious()) {
+					url = iterator.previous();
+					try {
+						setPageUrl();
+					} catch (IOException eGo) {
+						JOptionPane.showMessageDialog(null, "The follwing URL is invalid:" + url);
+					}
+				} else {
+					JOptionPane.showMessageDialog(null, "You can't go back any further.");
 				}
-				
 			}
 		});
-		
+
+		forBut.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				iterator.next();
+				if (iterator.hasNext()) {
+					url = iterator.next();
+					try {
+						setPageUrl();
+					} catch (IOException eGo) {
+						JOptionPane.showMessageDialog(null, "The follwing URL is invalid:" + url);
+					}
+					iterator.previous();
+				} else {
+					iterator.previous();
+					JOptionPane.showMessageDialog(null, "You can't go forward any further.");
+				}
+			}
+		});
+
 	}
+
+	private void setPageUrl() throws IOException {
+		setAddressText(url);
+		System.out.println(url);
+		htmlViewer.setPage(url);
+
+	}
+
 	private void generateAddressBar() {
 		addressbar.setMinimumSize(new Dimension(500, 20));
 		gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -116,7 +168,7 @@ public class ToolBar{
 	}
 
 	private void generateHomeButton() {
-		
+
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.weightx = 1;
 		gbc.weighty = 1;
@@ -150,66 +202,9 @@ public class ToolBar{
 	public void setAddressText(String address) {
 		addressbar.setText(address);
 	}
-	
-	public String getAddressText(){
+
+	public String getAddressText() {
 		return addressbar.getText();
 	}
 
-	public JTextField getAddressbar() {
-		return addressbar;
-	}
-
-	public void setAddressbar(JTextField addressbar) {
-		this.addressbar = addressbar;
-	}
-
-	public JButton getHomeBut() {
-		return homeBut;
-	}
-
-	public void setHomeBut(JButton homeBut) {
-		this.homeBut = homeBut;
-	}
-
-	public JButton getSettingsBut() {
-		return settingsBut;
-	}
-
-	public void setSettingsBut(JButton settingsBut) {
-		this.settingsBut = settingsBut;
-	}
-
-	public JButton getGoBut() {
-		return goBut;
-	}
-
-	public void setGoBut(JButton goBut) {
-		this.goBut = goBut;
-	}
-
-	public JButton getBackBut() {
-		return backBut;
-	}
-
-	public void setBackBut(JButton backBut) {
-		this.backBut = backBut;
-	}
-
-	public JButton getForBut() {
-		return forBut;
-	}
-
-	public void setForBut(JButton forBut) {
-		this.forBut = forBut;
-	}
-
-	public GridBagConstraints getGbc() {
-		return gbc;
-	}
-
-	public void setGbc(GridBagConstraints gbc) {
-		this.gbc = gbc;
-	}
-	
-	
 }
