@@ -47,7 +47,8 @@ public class ToolBar {
 
 	ToolBar(HTMLViewer jep) {
 		htmlViewer = jep;
-		url = config.getHome();
+		// This makes sure the first page that loads is the home page.
+		url = config.readHome();
 		try {
 			setPageUrl();
 			history.writeHistory(url);
@@ -57,12 +58,18 @@ public class ToolBar {
 			JOptionPane.showMessageDialog(null,
 					"The default home URL is invalid. Please change it using the config file.");
 		}
+		// When Home is pressed it will set it to the current page and load it.
 		homeBut.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				url = config.getHome();
+				url = config.readHome();
 				try {
 					setPageUrl();
 					history.writeHistory(url);
+					// The purpose of having the iterator jump back and forth it
+					// to make sure the current page the user is viewing is
+					// always one space next to the iterator
+					// and the temporary history is always previous to the
+					// iterator
 					if (iterator.hasNext()) {
 						iterator.next();
 					}
@@ -74,13 +81,14 @@ public class ToolBar {
 				}
 			}
 		});
-
+		// This is called when the user refreshes the page
 		refreshBut.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				htmlViewer.refreshPage(url);
 			}
 		});
-
+		// This takes text entered into the addressbar and goes to that url,
+		// returning an error if the url is invalid
 		goBut.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				url = getAddressText();
@@ -94,23 +102,25 @@ public class ToolBar {
 					iterator.previous();
 
 				} catch (IOException eGo) {
-					JOptionPane.showMessageDialog(null, "The follwing URL is invalid:" + url);
+					JOptionPane.showMessageDialog(null, "The follwing URL is invalid: " + url);
 				}
 			}
 		});
-
+		// This will bookmark the url the user is currently viewing
 		bookBut.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				bookmarks.writeBookmarks(url);
 			}
 		});
-
+		// This will open the settings window.
 		settingsBut.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				SettingsWindow sw = new SettingsWindow();
 			}
 		});
-
+		// This will check if there are any previous urls in the linked list, if
+		// so it will go
+		// back one url at a time until it reaches the end of the linked list.
 		backBut.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
@@ -119,14 +129,16 @@ public class ToolBar {
 					try {
 						setPageUrl();
 					} catch (IOException eGo) {
-						JOptionPane.showMessageDialog(null, "The follwing URL is invalid:" + url);
+						JOptionPane.showMessageDialog(null, "The follwing URL is invalid: " + url);
 					}
 				} else {
 					JOptionPane.showMessageDialog(null, "You can't go back any further.");
 				}
 			}
 		});
-
+		// This will jump over the current url and check if there are any urls
+		// after it. It will return an error if the only url next to the
+		// iterator is the current url.
 		forBut.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				iterator.next();
@@ -135,7 +147,7 @@ public class ToolBar {
 					try {
 						setPageUrl();
 					} catch (IOException eGo) {
-						JOptionPane.showMessageDialog(null, "The follwing URL is invalid:" + url);
+						JOptionPane.showMessageDialog(null, "The follwing URL is invalid: " + url);
 					}
 					iterator.previous();
 				} else {
@@ -144,7 +156,8 @@ public class ToolBar {
 				}
 			}
 		});
-
+		// Listens for any hyperlink events and will send the user to the
+		// hyperlink they pressed.
 		htmlViewer.addHyperlinkListener(new HyperlinkListener() {
 			public void hyperlinkUpdate(HyperlinkEvent e) {
 				if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
@@ -167,11 +180,15 @@ public class ToolBar {
 
 	}
 
+	// This is used to set the page of the HTMLViewer class. It throws the
+	// IOException instead of handling it so I can make sure that history is
+	// only added when it is a valid URL
 	private void setPageUrl() throws IOException {
 		setAddressText(url);
 		htmlViewer.setPage(url);
 	}
 
+	// Adds all the componenets to the toolbar panel
 	private void generateToolBar() {
 		toolbar.setLayout(new GridBagLayout());
 		toolbar.add(homeBut);
@@ -186,11 +203,14 @@ public class ToolBar {
 
 	}
 
+	// This generates the toolbar and returns it so it can be used in the main
+	// class.
 	public JPanel getToolbar() {
 		generateToolBar();
 		return toolbar;
 	}
 
+	// Used to set and get the address text when setting the URL via user input.
 	public void setAddressText(String address) {
 		addressbar.setText(address);
 	}

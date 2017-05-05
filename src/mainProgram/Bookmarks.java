@@ -13,7 +13,8 @@ public class Bookmarks {
 	File bookmarksFile = new File("BrowserFiles/bookmarks.txt");
 	ArrayList<String> bookmarks = new ArrayList<String>();
 
-	// Uses a BufferedReader to get the first line of text in the bookmarks file
+	// Clears the ArrayList and re adds elements from the textFile to the list.
+	// Returns the list so it can be used in the Settings class
 	public ArrayList<String> readBookmarks() {
 		bookmarks.clear();
 		try {
@@ -30,7 +31,7 @@ public class Bookmarks {
 		return bookmarks;
 	}
 
-	// Writes a new config file with the new home
+	// Writes the bookmark to the bottom of the bookmarks file
 	public void writeBookmarks(String h) {
 		try {
 			BufferedWriter writer = new BufferedWriter(new FileWriter(bookmarksFile, true));
@@ -43,6 +44,9 @@ public class Bookmarks {
 
 	}
 
+	// Removes the given index from the bookmarks list, then deletes the file
+	// and recreates it so it is blank finally re adds the list of bookmarks to
+	// the file (with the deleted bookmark no longer there)
 	public void deleteBookmark(int index) {
 		bookmarks.remove(index);
 		bookmarksFile.delete();

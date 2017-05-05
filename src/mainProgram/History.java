@@ -12,7 +12,9 @@ public class History {
 	File historyFile = new File("BrowserFiles/history.txt");
 	Stack<String> history = new Stack<String>();
 
-	// Uses a BufferedReader to read each line of the history file into a stack
+	// Uses a BufferedReader to read each line of the history file into a stack.
+	// I use a stack so the most recent history url (at the bottom of the text
+	// file) is at the top of the stack.
 	public Stack<String> readHistory() {
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader(historyFile));
@@ -28,7 +30,7 @@ public class History {
 		return history;
 	}
 
-	// Writes a string to the history file
+	// Writes a string to the bottom of the history file
 	public void writeHistory(String h) {
 		try {
 			BufferedWriter writer = new BufferedWriter(new FileWriter(historyFile, true));
@@ -41,6 +43,8 @@ public class History {
 
 	}
 
+	// Deletes the history file and creates it again without anything in the
+	// file.
 	public void clearHistory() {
 		historyFile.delete();
 		File historyFile = new File("BrowserFiles/history.txt");

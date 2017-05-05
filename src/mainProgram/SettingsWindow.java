@@ -53,14 +53,15 @@ public class SettingsWindow {
 		generateFrame();
 		generateMainPanel();
 		frame.setVisible(true);
-
+		// Simply clears the history and makes the text area empty.
 		clearHistory.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				history.clearHistory();
 				historyView.setText(null);
 			}
 		});
-
+		// Checks to make sure the user has a bookmark selected. if they do then
+		// it will get the index and use that to delete the bookmark.
 		deleteBookmark.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int index = bookmarksView.getSelectedIndex();
@@ -74,7 +75,8 @@ public class SettingsWindow {
 				generateBookmarkView();
 			}
 		});
-
+		// Takes the text from the textField and sets it to be the new default
+		// home.
 		addNewHome.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				config.writeHome(newHome.getText());
@@ -112,7 +114,8 @@ public class SettingsWindow {
 	private void generateHistoryView() {
 		historyTab.setLayout(new GridBagLayout());
 		historyView.setEditable(false);
-
+		// Will keep looping until all of the elements in the stack have been
+		// moved onto the TextField.
 		historyList = history.readHistory();
 		while (historyList.size() != 0) {
 			historyView.append(String.format("%s\n", historyList.pop()));
@@ -131,10 +134,12 @@ public class SettingsWindow {
 	}
 
 	private void generateBookmarkView() {
+		// Clears the JList so when the method is called again it doesnt duplicate elements.
 		model.removeAllElements();
 		ArrayList<String> bookmarksList = new ArrayList<String>();
 		bookmarksTab.setLayout(new GridBagLayout());
 		bookmarksList = bookmarks.readBookmarks();
+		// Loops through the arraylist and adds each element to the JList
 		for (int i = 0; i < bookmarksList.size(); i++) {
 			model.addElement(bookmarksList.get(i));
 		}

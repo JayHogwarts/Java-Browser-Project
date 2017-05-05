@@ -14,9 +14,9 @@ import java.io.IOException;
 
 public class Config {
 	File config = new File("BrowserFiles/config.txt");
-	String home = "";
+	String home;
 
-	// Uses a BufferedReader to get the first line of text in the config file
+	// Uses a BufferedReader to return the first line of text in the config file
 	public String readHome() {
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader(config));
@@ -47,11 +47,6 @@ public class Config {
 
 		this.home = h;
 
-	}
-
-	public String getHome() {
-		readHome();
-		return home;
 	}
 
 }
