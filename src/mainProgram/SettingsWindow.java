@@ -11,12 +11,16 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Stack;
 
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
@@ -27,13 +31,14 @@ public class SettingsWindow {
 	JFrame frame = new JFrame("Settings");
 	JTabbedPane mainPane = new JTabbedPane();
 	JPanel homeView = new JPanel();
-	JTextArea bookmarksView = new JTextArea();
+	DefaultListModel<String> model = new DefaultListModel<>();
+	JList<String> bookmarksView = new JList<>(model);
 	JTextArea historyView = new JTextArea();
 	JTextField newHome = new JTextField(30);
 	JButton addNewHome = new JButton("Update");
 	JLabel homeLabel = new JLabel("Please enter a new home page.");
 	JButton clearHistory = new JButton("Clear History");
-	JButton clearBookmarks = new JButton("Clear Bookmarks");
+	JButton deleteBookmark = new JButton("Delete Bookmark");
 	JScrollPane bsp = new JScrollPane(bookmarksView);
 	JScrollPane hsp = new JScrollPane(historyView);
 	JPanel historyTab = new JPanel();
@@ -43,7 +48,6 @@ public class SettingsWindow {
 	Bookmarks bookmarks = new Bookmarks();
 	Config config = new Config();
 	Stack<String> historyList = new Stack<String>();
-	Stack<String> bookmarksList = new Stack<String>();
 
 	SettingsWindow() {
 		generateFrame();
@@ -56,12 +60,27 @@ public class SettingsWindow {
 				historyView.setText(null);
 			}
 		});
-		
+
+		deleteBookmark.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int index = bookmarksView.getSelectedIndex();
+
+				if (index == -1) {
+					JOptionPane.showMessageDialog(null, "You have not selected a bookmark.");
+					return;
+				}
+				bookmarks.deleteBookmark(index);
+
+				generateBookmarkView();
+			}
+		});
+
 		addNewHome.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				config.writeHome(newHome.getText());
 			}
 		});
+
 	}
 
 	private void generateFrame() {
@@ -93,6 +112,7 @@ public class SettingsWindow {
 	private void generateHistoryView() {
 		historyTab.setLayout(new GridBagLayout());
 		historyView.setEditable(false);
+
 		historyList = history.readHistory();
 		while (historyList.size() != 0) {
 			historyView.append(String.format("%s\n", historyList.pop()));
@@ -111,18 +131,19 @@ public class SettingsWindow {
 	}
 
 	private void generateBookmarkView() {
+		model.removeAllElements();
+		ArrayList<String> bookmarksList = new ArrayList<String>();
 		bookmarksTab.setLayout(new GridBagLayout());
-		bookmarksView.setEditable(false);
 		bookmarksList = bookmarks.readBookmarks();
-		while (bookmarksList.size() != 0) {
-			bookmarksView.append(String.format("%s\n", bookmarksList.pop()));
+		for (int i = 0; i < bookmarksList.size(); i++) {
+			model.addElement(bookmarksList.get(i));
 		}
 		bsp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		gbc.fill = GridBagConstraints.BOTH;
 		gbc.weightx = 1;
 		gbc.weighty = 0.01;
 		gbc.gridy = 0;
-		bookmarksTab.add(clearBookmarks, gbc);
+		bookmarksTab.add(deleteBookmark, gbc);
 		gbc.fill = GridBagConstraints.BOTH;
 		gbc.weightx = 1;
 		gbc.weighty = 1;

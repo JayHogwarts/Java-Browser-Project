@@ -37,7 +37,7 @@ public class ToolBar {
 	JButton forBut = new JButton(">");
 	JButton refreshBut = new JButton("Refresh");
 	GridBagConstraints gbc = new GridBagConstraints();
-	JEditorPane htmlViewer;
+	HTMLViewer htmlViewer;
 	String url;
 	LinkedList<String> tempHistory = new LinkedList<String>();
 	ListIterator<String> iterator = tempHistory.listIterator();
@@ -45,7 +45,7 @@ public class ToolBar {
 	Bookmarks bookmarks = new Bookmarks();
 	Config config = new Config();
 
-	ToolBar(JEditorPane jep) {
+	ToolBar(HTMLViewer jep) {
 		htmlViewer = jep;
 		url = config.getHome();
 		try {
@@ -74,16 +74,10 @@ public class ToolBar {
 				}
 			}
 		});
-		
+
 		refreshBut.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Document doc = htmlViewer.getDocument();
-				doc.putProperty(Document.StreamDescriptionProperty, null);
-				try {
-					setPageUrl();
-				} catch (IOException e1) {
-					JOptionPane.showMessageDialog(null, "The follwing URL is invalid:" + url);
-				}
+				htmlViewer.refreshPage(url);
 			}
 		});
 
@@ -176,7 +170,6 @@ public class ToolBar {
 	private void setPageUrl() throws IOException {
 		setAddressText(url);
 		htmlViewer.setPage(url);
-
 	}
 
 	private void generateToolBar() {

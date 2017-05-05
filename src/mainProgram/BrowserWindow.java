@@ -15,7 +15,7 @@ import javax.swing.JScrollPane;
 
 public class BrowserWindow {
 	JFrame frame = new JFrame("Web Browser");
-	JEditorPane jep = new JEditorPane();
+	HTMLViewer jep = new HTMLViewer();
 	GridBagConstraints gbc = new GridBagConstraints();
 
 	public BrowserWindow() {
